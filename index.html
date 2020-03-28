@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>test2</title>
+	<script src="./popup/popup.js"></script>
+	<script>
+		"use strict";
+		(function (para) {
+			var p = para.sdk_url, n = para.name, w = window, d = document, s = 'script', x = null, y = null;
+			if (typeof (w['sensorsDataAnalytic201505']) !== 'undefined') {
+				return false;
+			}
+			w['sensorsDataAnalytic201505'] = n;
+			w[n] = w[n] || function (a) { return function () { (w[n]._q = w[n]._q || []).push([a, arguments]); } };
+			var ifs = ['track', 'quick', 'register', 'registerPage', 'registerOnce', 'trackSignup', 'trackAbtest', 'setProfile', 'setOnceProfile', 'appendProfile', 'incrementProfile', 'deleteProfile', 'unsetProfile', 'identify', 'login', 'logout', 'trackLink', 'clearAllRegister', 'getAppStatus'];
+			for (var i = 0; i < ifs.length; i++) {
+				// call 方法传参数 + 闭包 => 向数据发送的队列 _q 中 push 了需要发送的数据 包括 api 名如：track 和 track 方法的参数
+				w[n][ifs[i]] = w[n].call(null, ifs[i]);
+			}
+			if (!w[n]._t) {
+				x = d.createElement(s), y = d.getElementsByTagName(s)[0];
+				x.async = 1;
+				x.src = p;
+				x.setAttribute('charset', 'UTF-8');
+				w[n].para = para;
+				y.parentNode.insertBefore(x, y);
+			}
+		})({
+			sdk_url: './popup/sensorsdata.full.js',
+			heatmap_url: './popup/heatmap.full.js',
+			name: 'sensors',
+			max_string_length: 1500,
+			is_track_single_page: true,
+			source_channel: ['gz'],
+			show_log:false,
+			//is_track_single_page: true,
+			preset_properties: {
+				//是否采集$latest_utm最近一次广告系列相关参数，默认值true
+				latest_utm: true,
+				//是否采集$latest_traffic_source_type最近一次流量来源类型，默认值true
+				latest_traffic_source_type: true,
+				//是否采集$latest_search_keyword最近一次搜索引擎关键字，默认值true
+				latest_search_keyword: true,
+				//是否采集$latest_referrer最近一次前向地址，默认值true
+				latest_referrer: true,
+				//是否采集$latest_referrer_host最近一次前向地址，1.14.8以下版本默认是true，1.14.8及以上版本默认是false，需要手动设置为true开启
+				latest_referrer_host: true,
+				//是否采集$latest_landing_page最近一次落地页地址，默认值false
+				latest_landing_page: true,
+				//是否采集 $url 页面地址作为公共属性，默认值false
+				url: true
+			},
+			server_url: 'http://10.42.40.99:8106/sa?project=SDKTest',
+			heatmap: {}
+
+		});
+		sensors.quick('autoTrack');
+		sensors.track('pp2', {});
+		// sensors.registerPage({name:'xxxxxx'});
+		sensors.login('555sdf44555');
+		sensors.quick('setPlugin', {
+			popup: function (self) {
+				self.init({
+					api: 'http://10.42.189.228:8141/',
+					project: "SDKTest",
+					platform: "H5",
+					popup_window: {
+						onClick: function (json) {
+							alert(JSON.stringify(json));
+						}
+					}
+				})
+			}
+		});
+	</script>
+	<style>
+		button {
+			margin-top: 2000px;
+		}
+	</style>
+</head>
+
+<body>
+	<p>测试</p>
+	<a href="./index.html">去index.html</a>
+	<div id="456">
+		<div id="123">
+			<input id="3456789" name='我的input' placeholder="测试点击input内容采集情况" />
+		</div>
+		<input placeholder="测试点击input内容采集情况" />
+	</div>
+	<input placeholder="测试点击input内容采集情况" />
+	<br>
+	<div id="testgz" style="display:inline-block;height:200px;width:200px;background-color:aquamarine;">
+		<a href="#" target="">baidu</a>
+	</div>
+
+	<br>
+	<!-- <a href="javascript:;" id="123" data='test'> 点击按钮触发</a> -->
+	<div id="123" data='test' style="display:inline-block;height:200px;width:200px;background-color:blueviolet;"> 点击按钮触发
+	</div>
+	<div id="testdisplay" name='testdisplay' onclick="testClick(this)"
+		style="text-align: center; display:inline-block;width:320px;height:320px;background-color:blue">
+		<!-- <div onclick="divclick(this);" style="display:inline-block;width:120px;height:120px;background-color:red">我是内部div,触发点击事件</div> -->
+		<div style="text-align: center;display:inline-block;width:220px;height:220px;background-color:green">
+			我是内部div1,触发点击事件
+			<li style="display:inline-block;width:120px;height:120px;background-color:red">我是内部div2,触发点击事件</li>
+		</div>
+	</div>
+	<button>支付成功</button>
+	<br>
+	<input type="checkbox" style='margin-left:50px;' value='test' name='gz' checked='checked' /> 测试的checkbox点击
+	<!-- <a href='https://www.baidu.com' id='gobaidu' name='gobaidu' event='gztest' target="_blank">百度一下</a> -->
+
+
+	<script>
+		document.getElementById('testdisplay').onclick = function (e) {
+			sensors.quick('trackHeatMap', e.target);
+		}
+		function testClick(ele) {
+			sensors.quick('trackHeatMap', ele);
+		}
+		// 支付成功的函数
+		// var emitter = new eventEmitter();
+		// function payClick(ele) {
+		// 	var obj = {
+		// 		pay_id: '001290',
+		// 		pay_status: "success"
+		// 	}
+		// 	emitter.emit('paySuccess', obj);
+		// }
+
+		// // 订单状态模块
+		// emitter.on('paySuccess', function (data) {
+		// 	console.log('data', data);
+		// });
+
+		// // 订单列表模块
+		// emitter.on('paySuccess', function (data) {
+		// 	console.log('data', data);
+		// });
+
+		sensors.quick('isReady', function () {
+			sensors.events.on('send', function (data) {
+				//参数data就是发送的事件......
+				console.log('@@@@@' + data.event)
+			})
+			sensors.events.isReady();
+		})
+	</script>
+</body>
+
+</html>
